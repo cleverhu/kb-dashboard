@@ -10,9 +10,9 @@ type KbUserImpl struct {
 }
 
 func New(attrs ...KbUserModelAttrFunc) *KbUserImpl {
-	kbs := &KbUserImpl{}
-	KbUserModelAttrFuncs(attrs).Apply(kbs)
-	return kbs
+	kbu := &KbUserImpl{}
+	KbUserModelAttrFuncs(attrs).Apply(kbu)
+	return kbu
 }
 
 func (this *KbUserImpl) Mutate(attrs ...KbUserModelAttrFunc) *KbUserImpl {
