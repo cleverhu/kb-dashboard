@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"knowledgeBase/src/common"
-	"knowledgeBase/src/dbs"
 	"knowledgeBase/src/models/DocGrpModel"
 	"knowledgeBase/src/models/DocModel"
 	"knowledgeBase/src/models/KbModel"
@@ -34,7 +33,7 @@ func main() {
 				Name:      m["book_name"].(string),
 				Desc:      m["description"].(string),
 				Kind:      1,
-				CreatorId: 10000 + index,
+				CreatorID: 10000 + index,
 			}
 			fmt.Println(kb)
 
@@ -43,7 +42,7 @@ func main() {
 
 			user := KbUserModel.KbUserImpl{
 				KbID:   kb.ID,
-				UserID: kb.CreatorId,
+				UserID: kb.CreatorID,
 			}
 			common.Orm.Table("kb_users").Save(&user)
 
@@ -57,7 +56,7 @@ func main() {
 					dgm := DocGrpModel.DocGrpImpl{
 						GroupName: v["title"].(string),
 						KbID:      kb.ID,
-						CreatorID: kb.CreatorId,
+						CreatorID: kb.CreatorID,
 					}
 
 					common.Orm.Table("doc_grps").Save(&dgm)
@@ -76,7 +75,7 @@ func main() {
 						Title:     v["title"].(string),
 						TitleUrl:  v["url"].(string),
 						Content:   content["data"].(map[string]interface{})["content"].(string),
-						CreatorId: kb.CreatorId,
+						CreatorID: kb.CreatorID,
 						GroupID:   dgm.ID,
 					}
 
