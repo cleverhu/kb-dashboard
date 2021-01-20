@@ -15,7 +15,7 @@ type KbUserController struct {
 	KbUserService *services.KbUserService `inject:"-"`
 }
 
-func NewKbController() *KbUserController {
+func NewKbUserController() *KbUserController {
 	return &KbUserController{}
 }
 

@@ -10,8 +10,8 @@ import (
 
 func main() {
 	goft.Ignite().
-		Config(configuration.NewDBConfig(),configuration.NewKbUserServiceConfig()).
+		Config(configuration.NewDBConfig(), configuration.NewKbUserServiceConfig()).
 		Attach(middlewares.NewKbUserIDCheck()).
-		Mount("", controllers.NewKbController()).
+		Mount("", controllers.NewKbUserController()).
 		Launch()
 }
