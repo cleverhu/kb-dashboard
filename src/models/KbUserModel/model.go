@@ -6,10 +6,20 @@ import (
 )
 
 type KbUserImpl struct {
-	KbID     int       `gorm:"column:kb_id"`
-	UserID   int       `gorm:"column:user_id"`
-	JoinTime time.Time `gorm:"-"`
-	CanEdit  string    `gorm:"-"`
+	KbID     int       `gorm:"column:kb_id" json:"kb_id"`
+	UserID   int       `gorm:"column:user_id" json:"-"`
+	JoinTime time.Time `gorm:"column:join_time" json:"join_time"`
+	CanEdit  string    `gorm:"column:can_edit" json:"can_edit"`
+}
+
+type GetKbsRequest struct {
+	Size   int `json:"size"`
+	Page   int `json:"page"`
+	UserID int `json:"-"`
+}
+
+func NewGetKbsRequest() *GetKbsRequest {
+	return &GetKbsRequest{}
 }
 
 func (this *KbUserImpl) String() string {
