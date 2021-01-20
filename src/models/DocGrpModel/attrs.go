@@ -32,7 +32,7 @@ func WithCreateTime(time time.Time) DocGrpModelAttrFunc {
 
 func WithCreatorID(creatorID int) DocGrpModelAttrFunc {
 	return func(d *DocGrpImpl) {
-		d.CreatorId = creatorID
+		d.CreatorID = creatorID
 	}
 }
 

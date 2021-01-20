@@ -1,6 +1,9 @@
 package DocGrpModel
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type DocGrpImpl struct {
 	ID         int       `gorm:"column:group_id;primary_key"`
@@ -8,7 +11,7 @@ type DocGrpImpl struct {
 	KbID       int       `gorm:"column:kb_id;"`
 	CreateTime time.Time `gorm:"-"`
 	DocCount   int       `gorm:"-"`
-	CreatorId  int       `gorm:"creator_id"`
+	CreatorID  int       `gorm:"creator_id"`
 }
 
 func New(attrs ...DocGrpModelAttrFunc) *DocGrpImpl {
@@ -21,4 +24,9 @@ func (this *DocGrpImpl) Mutate(attrs ...DocGrpModelAttrFunc) *DocGrpImpl {
 
 	DocGrpModelAttrFuncs(attrs).Apply(this)
 	return this
+}
+
+func (this *DocGrpImpl) String() string {
+
+	return fmt.Sprintf("{groupId:%d,groupName:%s,kbId:%d,createTime:%s,docCount:%d,creatorID:%d}", this.ID, this.GroupName, this.KbID, this.CreateTime.Format("2006-01-02 15:04:05"), this.DocCount, this.CreatorID)
 }
