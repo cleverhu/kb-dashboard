@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"gopkg.in/yaml.v2"
+	"knowledgeBase/src/common"
 	"knowledgeBase/src/dbs"
 	"knowledgeBase/src/models/DocGrpModel"
 	"knowledgeBase/src/models/DocModel"
@@ -37,14 +38,14 @@ func main() {
 			}
 			fmt.Println(kb)
 
-			dbs.Orm.Table("kbs").Save(&kb)
+			common.Orm.Table("kbs").Save(&kb)
 			fmt.Println(kb)
 
 			user := KbUserModel.KbUserImpl{
 				KbID:   kb.ID,
 				UserID: kb.CreatorId,
 			}
-			dbs.Orm.Table("kb_users").Save(&user)
+			common.Orm.Table("kb_users").Save(&user)
 
 			record := m["_record"].(map[string]interface{})["toc_yml"].(string)
 			var y []map[string]interface{}
@@ -56,10 +57,10 @@ func main() {
 					dgm := DocGrpModel.DocGrpImpl{
 						GroupName: v["title"].(string),
 						KbID:      kb.ID,
-						CreatorId: kb.CreatorId,
+						CreatorID: kb.CreatorId,
 					}
 
-					dbs.Orm.Table("doc_grps").Save(&dgm)
+					common.Orm.Table("doc_grps").Save(&dgm)
 					fmt.Println(dgm)
 					fmt.Println(v["url"])
 					//https://www.yuque.com/api/docs/ls5hwx?book_id=2058470&include_contributors=true&include_hits=true&include_like=true&include_pager=true&include_suggests=true
@@ -79,7 +80,7 @@ func main() {
 						GroupID:   dgm.ID,
 					}
 
-					dbs.Orm.Table("docs").Save(&dm)
+					common.Orm.Table("docs").Save(&dm)
 
 					//return
 				}

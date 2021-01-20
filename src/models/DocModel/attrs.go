@@ -38,13 +38,13 @@ func WithContent(content string) DocModelAttrFunc {
 
 func WithCreatorID(creatorID int) DocModelAttrFunc {
 	return func(d *DocImpl) {
-		d.CreatorId = creatorID
+		d.CreatorID = creatorID
 	}
 }
 
 func WithLastEditorID(lastEditorID int) DocModelAttrFunc {
 	return func(d *DocImpl) {
-		d.LastEditorId = lastEditorID
+		d.LastEditorID = lastEditorID
 	}
 }
 

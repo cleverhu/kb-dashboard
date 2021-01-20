@@ -33,7 +33,7 @@ func WithKind(kind int) KbModelAttrFunc {
 
 func WithCreatorID(creatorID int) KbModelAttrFunc {
 	return func(kb *KbImpl) {
-		kb.CreatorId = creatorID
+		kb.CreatorID = creatorID
 	}
 }
 
