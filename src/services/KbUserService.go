@@ -13,10 +13,10 @@ func NewKbUserService() *KbUserService {
 	return &KbUserService{}
 }
 
-func (this *KbUserService) UserKbs(r *KbUserModel.GetKbsRequest) []*KbUserModel.KbUserImpl {
-	//fmt.Println(r)
+func (this *KbUserService) UserKbs(r *KbUserModel.GetKbsRequest) []*KbUserModel.KbUserResp {
 	return this.KbUserDao.FindKbsByUserID(r)
 }
 
-
-
+func (this *KbUserService) KbByID(kbID int)  {
+	this.KbUserDao.GetKbDetail(kbID)
+}

@@ -16,6 +16,10 @@ type KbImpl struct {
 	State      string    `gorm:"-"`
 }
 
+type KbDetail struct {
+
+}
+
 func (this *KbImpl) String() string {
 	str := fmt.Sprintf(`{kbId:%d,kbName:%s,desc:%s,kind:%d,creatorID:%d,isPrivate:%s,createTime:%s,state:%s}`,
 		this.ID, this.Name, this.Desc, this.Kind, this.CreatorID, this.IsPrivate, this.CreateTime.Format("2006-01-02 15:04:05"), this.State)

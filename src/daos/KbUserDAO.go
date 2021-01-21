@@ -1,7 +1,6 @@
 package daos
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 	"knowledgeBase/src/models/KbUserModel"
 )
@@ -14,11 +13,10 @@ func NewKbUserDao() *KbUserDAO {
 	return &KbUserDAO{}
 }
 
-func (this *KbUserDAO) FindKbsByUserID(r *KbUserModel.GetKbsRequest) []*KbUserModel.KbUserImpl {
-	var kbus []*KbUserModel.KbUserImpl
-	fmt.Println(kbus)
-	this.DB.Table("kb_users").Where("user_id = ?", r.UserID).Limit(r.Size).Offset(r.Size * (r.Page - 1)).Find(&kbus)
-	return kbus
+func (this *KbUserDAO) FindKbsByUserID(r *KbUserModel.GetKbsRequest) []*KbUserModel.KbUserResp {
+	var kb []*KbUserModel.KbUserResp
+	this.DB.Raw("select  kb_users.kb_id,kb_users.join_time,kb_users.can_edit,kbs.kb_name as kb_name from kb_users join kbs on kb_users.id = kbs.kb_id where kb_users.user_id = ? limit ? offset ? ",r.UserID,r.Size,r.Size * (r.Page - 1)).Find(&kb)
+	return kb
 }
 
 func (this *KbUserDAO) GetKbDetail(kbID int) {
