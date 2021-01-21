@@ -2,6 +2,7 @@ package services
 
 import (
 	"knowledgeBase/src/daos"
+	"knowledgeBase/src/models/KbModel"
 	"knowledgeBase/src/models/KbUserModel"
 )
 
@@ -17,6 +18,6 @@ func (this *KbUserService) UserKbs(r *KbUserModel.GetKbsRequest) []*KbUserModel.
 	return this.KbUserDao.FindKbsByUserID(r)
 }
 
-func (this *KbUserService) KbByID(kbID int)  {
-	this.KbUserDao.GetKbDetail(kbID)
+func (this *KbUserService) KbByID(kbID int) *KbModel.KbDetail {
+	return this.KbUserDao.GetKbDetail(kbID)
 }

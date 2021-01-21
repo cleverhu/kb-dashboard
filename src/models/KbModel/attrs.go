@@ -1,7 +1,5 @@
 package KbModel
 
-import "time"
-
 type KbModelAttrFunc func(kb *KbImpl)
 
 type KbModelAttrFuncs []KbModelAttrFunc
@@ -40,12 +38,6 @@ func WithCreatorID(creatorID int) KbModelAttrFunc {
 func WithLastEditorID(isPrivate string) KbModelAttrFunc {
 	return func(kb *KbImpl) {
 		kb.IsPrivate = isPrivate
-	}
-}
-
-func WithCreateTime(createTime time.Time) KbModelAttrFunc {
-	return func(kb *KbImpl) {
-		kb.CreateTime = createTime
 	}
 }
 

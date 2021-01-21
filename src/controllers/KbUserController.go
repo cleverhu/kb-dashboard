@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shenyisyn/goft-gin/goft"
 	"gorm.io/gorm"
 	"knowledgeBase/src/middlewares"
 	"knowledgeBase/src/models/KbUserModel"
 	"knowledgeBase/src/services"
+	"strconv"
 )
 
 type KbUserController struct {
@@ -32,8 +32,10 @@ func (this *KbUserController) KbsByUserID(ctx *gin.Context) goft.Json {
 
 func (this *KbUserController) KbDetailByID(ctx *gin.Context) goft.Json {
 	kbID := ctx.Param("id")
-	fmt.Println(kbID)
-	return gin.H{"result": nil, "code": 10001}
+	id, err := strconv.Atoi(kbID)
+	goft.Error(err, "知识库ID错误")
+	kbDetail := this.KbUserService.KbByID(id)
+	return gin.H{"result": kbDetail, "code": 10001}
 }
 
 func (this *KbUserController) Build(goft *goft.Goft) {

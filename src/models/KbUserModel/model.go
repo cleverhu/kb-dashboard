@@ -2,6 +2,7 @@ package KbUserModel
 
 import (
 	"fmt"
+	"knowledgeBase/src/models/JsonTime"
 	"time"
 )
 
@@ -20,8 +21,8 @@ type GetKbsRequest struct {
 
 type KbUserResp struct {
 	KbID     int       `gorm:"kb_id" json:"kb_id"`
-	KbName     string    `gorm:"kb_name"  json:"kb_name"`
-	JoinTime time.Time `gorm:"join_time"  json:"join_time"`
+	KbName   string    `gorm:"kb_name"  json:"kb_name"`
+	JoinTime JsonTime.JsonTime `gorm:"join_time"  json:"join_time"`
 	CanEdit  string    `gorm:"can_edit"  json:"can_edit"`
 }
 
