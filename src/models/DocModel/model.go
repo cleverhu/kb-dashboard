@@ -16,6 +16,7 @@ type DocImpl struct {
 	UpdatedAt    time.Time `gorm:"-"`
 	Removed      string    `gorm:"-"`
 	GroupID      int       `gorm:"column:group_id"`
+	ShortUrl     string    `gorm:"column:shorturl"`
 }
 
 func (this *DocImpl) String() string {
@@ -34,5 +35,3 @@ func (this *DocImpl) Mutate(attrs ...DocModelAttrFunc) *DocImpl {
 	DocModelAttrFuncs(attrs).Apply(this)
 	return this
 }
-
-

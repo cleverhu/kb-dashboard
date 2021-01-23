@@ -12,6 +12,7 @@ type DocGrpImpl struct {
 	CreateTime time.Time `gorm:"-"`
 	DocCount   int       `gorm:"-"`
 	CreatorID  int       `gorm:"creator_id"`
+	ShortUrl   string    `gorm:"column:shorturl"`
 }
 
 func (this *DocGrpImpl) String() string {
@@ -29,5 +30,3 @@ func (this *DocGrpImpl) Mutate(attrs ...DocGrpModelAttrFunc) *DocGrpImpl {
 	DocGrpModelAttrFuncs(attrs).Apply(this)
 	return this
 }
-
-

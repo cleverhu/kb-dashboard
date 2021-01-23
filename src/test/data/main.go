@@ -70,7 +70,7 @@ func main() {
 							KbID:      kb.ID,
 							CreatorID: kb.CreatorID,
 						}
-
+						dgm.Mutate(DocGrpModel.WithShortUrl(common.ShotURL("dgm" + fmt.Sprintf("%d", time.Now().UnixNano()))))
 						common.Orm.Table("doc_grps").Save(&dgm)
 
 						_, resStr, _, _ := myHttp.Request("get", "https://www.yuque.com/api/docs/"+v["url"].(string)+"?book_id="+bookId+"&include_contributors=true&include_hits=true&include_like=true&include_pager=true&include_suggests=true", nil, nil, "", "", 30)
@@ -86,7 +86,7 @@ func main() {
 							CreatorID: kb.CreatorID,
 							GroupID:   dgm.ID,
 						}
-
+						dm.Mutate(DocModel.WithShortUrl(common.ShotURL("dm" + fmt.Sprintf("%d", time.Now().UnixNano()))))
 						common.Orm.Table("docs").Save(&dm)
 					}
 
@@ -94,7 +94,7 @@ func main() {
 
 			}
 			index++
-			//return
+			//returnç
 		}
 	}
 

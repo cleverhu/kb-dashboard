@@ -36,6 +36,12 @@ func WithCreatorID(creatorID int) DocGrpModelAttrFunc {
 	}
 }
 
+func WithShortUrl(url string) DocGrpModelAttrFunc {
+	return func(d *DocGrpImpl) {
+		d.ShortUrl = url
+	}
+}
+
 func (this DocGrpModelAttrFuncs) Apply(d *DocGrpImpl) {
 	for _, f := range this {
 		f(d)

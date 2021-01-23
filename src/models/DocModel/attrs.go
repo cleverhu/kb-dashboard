@@ -66,6 +66,12 @@ func WithGroupID(groupID int) DocModelAttrFunc {
 	}
 }
 
+func WithShortUrl(url string) DocModelAttrFunc {
+	return func(d *DocImpl) {
+		d.ShortUrl = url
+	}
+}
+
 func (this DocModelAttrFuncs) Apply(d *DocImpl) {
 	for _, f := range this {
 		f(d)
