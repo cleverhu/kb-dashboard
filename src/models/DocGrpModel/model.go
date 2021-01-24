@@ -15,6 +15,8 @@ type DocGrpImpl struct {
 	ShortUrl   string    `gorm:"column:shorturl"`
 }
 
+
+
 func (this *DocGrpImpl) String() string {
 	return fmt.Sprintf("{groupId:%d,groupName:%s,kbId:%d,createTime:%s,docCount:%d,creatorID:%d}", this.ID, this.GroupName, this.KbID, this.CreateTime.Format("2006-01-02 15:04:05"), this.DocCount, this.CreatorID)
 }

@@ -13,7 +13,7 @@ type KbImpl struct {
 	CreatorID  int       `gorm:"column:creator_id" json:"creator_id"`
 	IsPrivate  string    `gorm:"is_private" json:"is_private"`
 	CreateTime time.Time `gorm:"create_time" json:"create_time"`
-	State      string    `gorm:"-" json:"-"`
+	State      int       `gorm:"-" json:"-"`
 }
 
 type User struct {
