@@ -150,7 +150,7 @@ func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 
 	this.DB.Table("doc_grps").Raw("select kb_id from doc_grps where group_id = ?", req.GroupID).Find(&kb)
 	if kb.ID == 0 {
-		return "父分组不存在,修改失败"
+		return "父分组不存在,添加失败"
 	}
 	//kb.ID = 0
 	this.DB.Table("kb_users").Raw("select kb_id from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&kb)
