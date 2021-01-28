@@ -2,7 +2,7 @@ package configuration
 
 import (
 	"gorm.io/gorm"
-	"knowledgeBaseNuxt/src/common"
+	"knowledgeBase/src/common"
 )
 
 type DBConfig struct {

@@ -2,6 +2,7 @@ package services
 
 import (
 	"knowledgeBase/src/daos"
+	"knowledgeBase/src/models/DocGrpModel"
 	"knowledgeBase/src/models/KbModel"
 	"knowledgeBase/src/models/KbUserModel"
 )
@@ -22,3 +23,14 @@ func (this *KbUserService) KbByID(kbID int) *KbModel.KbDetail {
 	return this.KbUserDao.GetKbDetail(kbID)
 }
 
+func (this *KbUserService) DeleteGroupByID(groupID, userID int) string {
+	return this.KbUserDao.DeleteGroupByID(groupID, userID)
+}
+
+func (this *KbUserService) UpdateGroupByID(request *DocGrpModel.DocGroupInsertRequest, userID int) string{
+	return this.KbUserDao.UpdateGroupByID(request, userID)
+}
+
+func (this *KbUserService) InsertGroup(request *DocGrpModel.DocGroupInsertRequest, userID int) string{
+	return this.KbUserDao.InsertGroupByID(request, userID)
+}

@@ -15,6 +15,15 @@ type DocGrpImpl struct {
 	ShortUrl   string    `gorm:"column:shorturl"`
 }
 
+type DocGroupInsertRequest struct {
+	GroupID  int    `json:"group_id"`
+	Title    string `json:"label"`
+	SonTitle string `json:"sonTitle"`
+}
+
+func NewDocGroupInsertRequest() *DocGroupInsertRequest {
+	return &DocGroupInsertRequest{}
+}
 
 
 func (this *DocGrpImpl) String() string {

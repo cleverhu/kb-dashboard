@@ -3,6 +3,7 @@ package common
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"strconv"
 )
 
@@ -39,8 +40,8 @@ var (
 //	return result, nil
 //}
 
-func ShotURL(longURL string) string {
-	md5Str := getMd5Str(longURL)
+func ShotURL(longURL interface{}) string {
+	md5Str := getMd5Str(fmt.Sprintf("%v", longURL))
 	var tempVal int64
 	//var result [4]string
 	var tempUri []byte

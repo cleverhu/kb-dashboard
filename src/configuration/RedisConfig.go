@@ -2,7 +2,7 @@ package configuration
 
 import (
 	"github.com/go-redis/redis"
-	"knowledgeBaseNuxt/src/common"
+	"knowledgeBase/src/common"
 )
 
 type RedisConfig struct {
