@@ -41,7 +41,7 @@ func WithLastEditorID(isPrivate string) KbModelAttrFunc {
 	}
 }
 
-func WithState(state string) KbModelAttrFunc {
+func WithState(state int) KbModelAttrFunc {
 	return func(kb *KbImpl) {
 		kb.State = state
 	}

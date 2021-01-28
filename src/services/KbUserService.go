@@ -21,3 +21,4 @@ func (this *KbUserService) UserKbs(r *KbUserModel.GetKbsRequest) []*KbUserModel.
 func (this *KbUserService) KbByID(kbID int) *KbModel.KbDetail {
 	return this.KbUserDao.GetKbDetail(kbID)
 }
+

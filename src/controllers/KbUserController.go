@@ -11,7 +11,7 @@ import (
 )
 
 type KbUserController struct {
-	db            *gorm.DB                `inject:"-"`
+	Db            *gorm.DB                `inject:"-"`
 	KbUserService *services.KbUserService `inject:"-"`
 }
 
@@ -24,7 +24,6 @@ func (this *KbUserController) Name() string {
 }
 
 func (this *KbUserController) KbsByUserID(ctx *gin.Context) goft.Json {
-
 	k, _ := ctx.Get("_req")
 	kbs := this.KbUserService.UserKbs(k.(*KbUserModel.GetKbsRequest))
 	return gin.H{"result": kbs, "code": 10000}
@@ -41,5 +40,4 @@ func (this *KbUserController) KbDetailByID(ctx *gin.Context) goft.Json {
 func (this *KbUserController) Build(goft *goft.Goft) {
 	goft.HandleWithFairing("POST", "/kns", this.KbsByUserID, middlewares.NewKbUserParamsCheck()).
 		HandleWithFairing("GET", "/kns/:id", this.KbDetailByID)
-
 }

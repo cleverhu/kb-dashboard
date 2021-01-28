@@ -94,7 +94,7 @@ func main() {
 
 			}
 			index++
-			//returnç
+			return
 		}
 	}
 
