@@ -23,6 +23,10 @@ func (this *KbUserService) KbByID(kbID int) *KbModel.KbDetail {
 	return this.KbUserDao.GetKbDetail(kbID)
 }
 
+func (this *KbUserService) GroupDetailByID(kbID, userID int) []*DocGrpModel.DocGrpResponseImpl{
+	return this.KbUserDao.GroupDetailByID(kbID, userID)
+}
+
 func (this *KbUserService) DeleteGroupByID(groupID, userID int) string {
 	return this.KbUserDao.DeleteGroupByID(groupID, userID)
 }

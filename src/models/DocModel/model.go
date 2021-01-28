@@ -19,6 +19,9 @@ type DocImpl struct {
 	ShortUrl     string    `gorm:"column:shorturl"`
 }
 
+
+
+
 func (this *DocImpl) String() string {
 	str := fmt.Sprintf(`{docId:%d,kbId:%d,title:%s,titleUrl:%s,content:%s,creatorID:%d,lastEditorID:%d,updatedAt:%s,removed:%s,groupID:%d}`,
 		this.ID, this.KbID, this.Title, this.TitleUrl, this.Content, this.CreatorID, this.LastEditorID, this.UpdatedAt.Format("2006-01-02 15:04:05"), this.Removed, this.GroupID)

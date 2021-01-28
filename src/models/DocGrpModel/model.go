@@ -21,6 +21,15 @@ type DocGroupInsertRequest struct {
 	SonTitle string `json:"sonTitle"`
 }
 
+
+type DocGrpResponseImpl struct {
+	GroupID       int           `gorm:"column:group_id;primary_key" json:"group_id"`
+	GroupName     string        `gorm:"column:group_name" json:"label"`
+	GroupShortUrl string        `gorm:"column:shorturl" json:"url"`
+	Children      []interface{} `gorm:"-" json:"children,omitempty"`
+}
+
+
 func NewDocGroupInsertRequest() *DocGroupInsertRequest {
 	return &DocGroupInsertRequest{}
 }

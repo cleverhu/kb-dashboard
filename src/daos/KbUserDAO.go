@@ -37,7 +37,48 @@ func (this *KbUserDAO) GetKbDetail(kbID int) *KbModel.KbDetail {
 	return kd
 }
 
-func (this *KbUserDAO) DeleteGroupByID(groupID int, userID int) string {
+func (this *KbUserDAO) GroupDetailByID(kbID, userID int) []*DocGrpModel.DocGrpResponseImpl {
+
+	c := &struct {
+		C int `gorm:"column:c"`
+	}{}
+
+	this.DB.Table("kb_users").Raw("select count(*) as c from kb_users where kb_id = ? and user_id = ?", kbID, userID).Find(&c)
+
+	if c.C == 0 {
+		return nil
+	}
+
+	kbName := &struct {
+		Name string `gorm:"column:kb_name"`
+	}{}
+
+	this.DB.Table("kbs").Raw("select kb_name from kbs where kb_id = ? =", kbID).Find(&kbName.Name)
+
+	var dgm []*DocGrpModel.DocGrpResponseImpl
+
+	this.groupDetailByID(kbName.Name, kbID, 0, &dgm)
+	return dgm
+}
+
+func (this *KbUserDAO) groupDetailByID(kbName string, kbID, groupID int, result *[]*DocGrpModel.DocGrpResponseImpl) []*DocGrpModel.DocGrpResponseImpl {
+	//先找到分组
+	this.DB.Table("doc_grps").Raw(`select group_id,group_name,shorturl from doc_grps 
+where kb_id = ? and pid = ? 
+order by group_order`, kbID, groupID).Find(&result)
+
+	for _, v := range *result {
+		//寻找子分组 这个数据是临时的，不会返回真实数据
+		var grp []*DocGrpModel.DocGrpResponseImpl
+		this.groupDetailByID(kbName, kbID, v.GroupID, &grp)
+		for _, item := range grp {
+			v.Children = append(v.Children, item)
+		}
+	}
+	return *result
+}
+
+func (this *KbUserDAO) DeleteGroupByID(groupID, userID int) string {
 
 	kb := &struct {
 		ID int `gorm:"column:kb_id"`
@@ -120,7 +161,7 @@ func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 
 	if this.DB.Table("doc_grps").Exec(`insert into 
 doc_grps (group_name,kb_id,create_time,creator_id,shorturl,pid) 
-values(?,?,?,?,?,?)`, req.SonTitle, kb.ID, time.Now(), userID,common.ShotURL(time.Now().UnixNano()), req.GroupID).Error != nil {
+values(?,?,?,?,?,?)`, req.SonTitle, kb.ID, time.Now(), userID, common.ShotURL(time.Now().UnixNano()), req.GroupID).Error != nil {
 		return "添加失败"
 	}
 
