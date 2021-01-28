@@ -88,16 +88,17 @@ func (this *KbUserDAO) DeleteGroupByID(groupID, userID int) string {
 	if kb.ID == 0 {
 		return "分组不存在,删除失败"
 	}
-	kb.ID = 0
-	this.DB.Table("kb_users").Raw("select kb_id from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&kb)
-
-	if kb.ID == 0 {
-		return "您无权限操作该知识库"
-	}
-
 	c := &struct {
 		C int `gorm:"column:c"`
 	}{}
+
+	this.DB.Table("kb_users").Raw("select count(*) from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
+
+	if c.C == 0 {
+		return "您无权限操作该知识库"
+	}
+
+	c.C = 0
 	this.DB.Table("docs").Raw("select count(*) as c from docs where group_id=?", groupID).Find(&c)
 
 	if c.C > 0 {
@@ -124,10 +125,14 @@ func (this *KbUserDAO) UpdateGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 	if kb.ID == 0 {
 		return "分组不存在,修改失败"
 	}
-	//kb.ID = 0
-	this.DB.Table("kb_users").Raw("select kb_id from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&kb)
 
-	if kb.ID == 0 {
+	c := &struct {
+		C int `gorm:"column:c"`
+	}{}
+
+	this.DB.Table("kb_users").Raw("select count(*) from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
+
+	if c.C == 0 {
 		return "您无权限操作该知识库"
 	}
 
@@ -152,10 +157,12 @@ func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 	if kb.ID == 0 {
 		return "父分组不存在,添加失败"
 	}
-	//kb.ID = 0
-	this.DB.Table("kb_users").Raw("select kb_id from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&kb)
+	c := &struct {
+		C int `gorm:"column:c"`
+	}{}
+	this.DB.Table("kb_users").Raw("select count(*) from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
 
-	if kb.ID == 0 {
+	if c.C == 0 {
 		return "您无权限操作该知识库"
 	}
 
