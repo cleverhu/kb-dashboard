@@ -92,7 +92,7 @@ func (this *KbUserDAO) DeleteGroupByID(groupID, userID int) string {
 		C int `gorm:"column:c"`
 	}{}
 
-	this.DB.Table("kb_users").Raw("select count(*) from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
+	this.DB.Table("kb_users").Raw("select count(*) as c from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
 
 	if c.C == 0 {
 		return "您无权限操作该知识库"
@@ -130,7 +130,7 @@ func (this *KbUserDAO) UpdateGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 		C int `gorm:"column:c"`
 	}{}
 
-	this.DB.Table("kb_users").Raw("select count(*) from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
+	this.DB.Table("kb_users").Raw("select count(*) as cfrom kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
 
 	if c.C == 0 {
 		return "您无权限操作该知识库"
@@ -160,7 +160,7 @@ func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 	c := &struct {
 		C int `gorm:"column:c"`
 	}{}
-	this.DB.Table("kb_users").Raw("select count(*) from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
+	this.DB.Table("kb_users").Raw("select count(*) as c from kb_users where user_id = ? and can_edit ='Y' and kb_id = ?", userID, kb.ID).Find(&c)
 
 	if c.C == 0 {
 		return "您无权限操作该知识库"
