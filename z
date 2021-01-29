@@ -1,0 +1,10 @@
+sshpass -p 'Hu928973510!' ssh ruler@101.132.107.3 <<end
+kubectl delete -f  /home/ruler/mydeployments/kb/dashboard-back.yaml
+end
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o dashboard-back main.go
+sshpass -p 'Hu928973510!' scp dashboard-back ruler@101.132.107.3:/home/ruler/myweb/kb
+
+sshpass -p 'Hu928973510!' ssh ruler@101.132.107.3 <<end
+kubectl apply -f  /home/ruler/mydeployments/kb/dashboard-back.yaml
+end

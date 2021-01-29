@@ -11,7 +11,7 @@ import (
 func main() {
 	goft.Ignite().
 		Config(configuration.NewDBConfig(), configuration.NewKbUserServiceConfig(),configuration.NewRedisConfig()).
-		Attach(middlewares.NewKbUserIDCheck()).
+		Attach(middlewares.NewCors(),middlewares.NewKbUserIDCheck()).
 		Mount("", controllers.NewKbUserController()).
 		Launch()
 }

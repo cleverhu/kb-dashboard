@@ -16,11 +16,11 @@ type DocGrpImpl struct {
 }
 
 type DocGroupInsertRequest struct {
+	KbID     int    `json:"kb_id"`
 	GroupID  int    `json:"group_id"`
 	Title    string `json:"label"`
 	SonTitle string `json:"sonTitle"`
 }
-
 
 type DocGrpResponseImpl struct {
 	GroupID       int           `gorm:"column:group_id;primary_key" json:"group_id"`
@@ -29,11 +29,9 @@ type DocGrpResponseImpl struct {
 	Children      []interface{} `gorm:"-" json:"children,omitempty"`
 }
 
-
 func NewDocGroupInsertRequest() *DocGroupInsertRequest {
 	return &DocGroupInsertRequest{}
 }
-
 
 func (this *DocGrpImpl) String() string {
 	return fmt.Sprintf("{groupId:%d,groupName:%s,kbId:%d,createTime:%s,docCount:%d,creatorID:%d}", this.ID, this.GroupName, this.KbID, this.CreateTime.Format("2006-01-02 15:04:05"), this.DocCount, this.CreatorID)
