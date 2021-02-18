@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"knowledgeBase/src/middlewares"
 	"knowledgeBase/src/models/DocGrpModel"
+	"knowledgeBase/src/models/KbModel"
 	"knowledgeBase/src/models/KbUserModel"
 	"knowledgeBase/src/services"
 	"strconv"
@@ -38,6 +39,15 @@ func (this *KbUserController) KbDetailByID(ctx *gin.Context) goft.Json {
 	goft.Error(err, "知识库ID错误")
 	kbDetail := this.KbUserService.KbByID(id)
 	return gin.H{"result": kbDetail, "code": 10001}
+}
+
+//增加用户知识库
+func (this *KbUserController) PutKb(ctx *gin.Context) goft.Json {
+	req := &KbModel.KbInputRequest{}
+	goft.Error(ctx.ShouldBindJSON(req), "输入不合法")
+	req.CreatorID = ctx.GetInt("_userid")
+	result := this.KbUserService.PutKb(req)
+	return gin.H{"result": result, "code": 10002}
 }
 
 //通过知识库ID获取分组信息
@@ -78,9 +88,12 @@ func (this *KbUserController) InsertGroup(ctx *gin.Context) goft.Json {
 	return gin.H{"result": result, "code": 10004}
 }
 
-
 func (this *KbUserController) Build(goft *goft.Goft) {
+	//获取知识库列表
 	goft.HandleWithFairing("POST", "/kns", this.KbsByUserID, middlewares.NewKbUserParamsCheck()).
+		//增加知识库
+		Handle("PUT", "/kns", this.PutKb).
+		//获取知识库信息
 		Handle("GET", "/kns/:id", this.KbDetailByID).
 		//查看分组
 		Handle("GET", "/group/:kb_id", this.GetGroupByID).
@@ -90,6 +103,5 @@ func (this *KbUserController) Build(goft *goft.Goft) {
 		Handle("POST", "/group", this.UpdateGroup).
 		//增加
 		Handle("PUT", "/group", this.InsertGroup)
-
 
 }

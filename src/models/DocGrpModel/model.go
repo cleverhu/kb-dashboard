@@ -16,7 +16,7 @@ type DocGrpImpl struct {
 }
 
 type DocGroupInsertRequest struct {
-	KbID     int    `json:"kb_id"`
+	KbID     int64    `json:"kb_id"`
 	GroupID  int    `json:"group_id"`
 	Title    string `json:"label"`
 	SonTitle string `json:"sonTitle"`

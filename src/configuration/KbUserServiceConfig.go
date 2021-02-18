@@ -19,3 +19,6 @@ func (this *KbUserServiceConfig) KbUserDAO() *daos.KbUserDAO {
 func (this *KbUserServiceConfig) KbUserService() *services.KbUserService {
 	return services.NewKbUserService()
 }
+
+
+

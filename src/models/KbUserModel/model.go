@@ -25,6 +25,7 @@ type KbUserResp struct {
 	JoinTime  JsonTime.JsonTime `gorm:"join_time"  json:"join_time"`
 	CanEdit   string            `gorm:"can_edit"  json:"can_edit"`
 	CreatorID int               `gorm:"can_edit"  json:"creator_id"`
+	Kind      string            `gorm:"kind"  json:"kind"`
 }
 
 func NewGetKbsRequest() *GetKbsRequest {

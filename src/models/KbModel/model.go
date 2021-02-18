@@ -16,6 +16,15 @@ type KbImpl struct {
 	State      int       `gorm:"-" json:"-"`
 }
 
+type KbInputRequest struct {
+	ID        int    `gorm:"column:kb_id;primary_key" json:"-"`
+	Name      string `gorm:"column:kb_name" json:"kb_name"`
+	Desc      string `gorm:"column:kb_desc" json:"kb_desc"`
+	Kind      int    `gorm:"column:kb_kind_id" json:"kb_kind_id"`
+	IsPrivate string `gorm:"is_private" json:"is_private"`
+	CreatorID int    `gorm:"column:creator_id" json:"-"`
+}
+
 type User struct {
 	Name string `gorm:"column:name" json:"user_name"`
 }

@@ -1,18 +1,22 @@
 package daos
 
 import (
+	"context"
 	"fmt"
 	"gorm.io/gorm"
 	"knowledgeBase/src/common"
+	"knowledgeBase/src/grpcServices"
 	"knowledgeBase/src/models/DocGrpModel"
 	"knowledgeBase/src/models/KbModel"
 	"knowledgeBase/src/models/KbUserModel"
+
 	"strings"
 	"time"
 )
 
 type KbUserDAO struct {
-	DB *gorm.DB `inject:"-"`
+	DB                  *gorm.DB                         `inject:"-"`
+	KbInfoServiceClient grpcServices.KbInfoServiceClient `inject:"-"`
 }
 
 func NewKbUserDao() *KbUserDAO {
@@ -21,7 +25,11 @@ func NewKbUserDao() *KbUserDAO {
 
 func (this *KbUserDAO) FindKbsByUserID(r *KbUserModel.GetKbsRequest) []*KbUserModel.KbUserResp {
 	var kb []*KbUserModel.KbUserResp
-	this.DB.Raw("select  kb_users.kb_id,kb_users.join_time,kb_users.can_edit,kbs.kb_name as kb_name,kbs.creator_id as creator_id from kb_users join kbs on kb_users.kb_id = kbs.kb_id where kb_users.user_id = ? limit ? offset ? ", r.UserID, r.Size, r.Size*(r.Page-1)).Find(&kb)
+	this.DB.Raw(`select  kb_users.kb_id,kb_users.join_time,kb_users.can_edit,kbs.kb_name as kb_name,kbs.creator_id as creator_id ,kb_kinds.kind as kind
+from kb_users 
+right join kbs on kb_users.kb_id = kbs.kb_id
+right join kb_kinds on kbs.kb_kind_id = kb_kinds.id
+where kb_users.user_id = ? limit ? offset ? `, r.UserID, r.Size, r.Size*(r.Page-1)).Find(&kb)
 	return kb
 }
 
@@ -36,6 +44,22 @@ func (this *KbUserDAO) GetKbDetail(kbID int) *KbModel.KbDetail {
 	kd.UserID = ids
 
 	return kd
+}
+
+func (this *KbUserDAO) PutKb(req *KbModel.KbInputRequest) string {
+	err := this.DB.Transaction(func(tx *gorm.DB) error {
+		err := tx.Table("kbs").Create(&req).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Table("kb_users").Exec(`insert into kb_users (kb_id,user_id,join_time,can_edit) values(?,?,?,?)`,
+			req.ID, req.CreatorID, time.Now(), "Y").Error
+		return err
+	})
+	if err != nil {
+		return "添加失败"
+	}
+	return "添加成功"
 }
 
 func (this *KbUserDAO) GroupDetailByID(kbID, userID int) []*DocGrpModel.DocGrpResponseImpl {
@@ -54,7 +78,7 @@ func (this *KbUserDAO) GroupDetailByID(kbID, userID int) []*DocGrpModel.DocGrpRe
 		Name string `gorm:"column:kb_name"`
 	}{}
 
-	this.DB.Table("kbs").Raw("select kb_name from kbs where kb_id = ? =", kbID).Find(&kbName.Name)
+	this.DB.Table("kbs").Raw("select kb_name from kbs where kb_id = ?", kbID).Find(&kbName.Name)
 
 	var dgm []*DocGrpModel.DocGrpResponseImpl
 
@@ -82,7 +106,7 @@ order by group_order`, kbID, groupID).Find(&result)
 func (this *KbUserDAO) DeleteGroupByID(groupID, userID int) string {
 
 	kb := &struct {
-		ID int `gorm:"column:kb_id"`
+		ID int64 `gorm:"column:kb_id"`
 	}{}
 
 	this.DB.Table("doc_grps").Raw("select kb_id from doc_grps where group_id = ?", groupID).Find(&kb)
@@ -109,6 +133,10 @@ func (this *KbUserDAO) DeleteGroupByID(groupID, userID int) string {
 	if this.DB.Table("doc_grps").Exec("delete  from doc_grps where group_id =?", groupID).Error != nil {
 		return "删除失败"
 	}
+	go func() {
+		res, _ := this.KbInfoServiceClient.UpdateKbDetailList(context.Background(), &grpcServices.KbInfoRequest{Id: []int64{kb.ID}})
+		fmt.Println(kb.ID, "更新结果:", res.Result)
+	}()
 
 	return "删除成功"
 }
@@ -120,7 +148,7 @@ func (this *KbUserDAO) UpdateGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 	}
 
 	kb := &struct {
-		ID int `gorm:"column:kb_id"`
+		ID int64 `gorm:"column:kb_id"`
 	}{}
 
 	this.DB.Table("doc_grps").Raw("select kb_id from doc_grps where group_id = ?", req.GroupID).Find(&kb)
@@ -141,6 +169,16 @@ func (this *KbUserDAO) UpdateGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 	if this.DB.Table("doc_grps").Exec("update  doc_grps set group_name = ? where group_id =?", req.Title, req.GroupID).Error != nil {
 		return "修改失败"
 	}
+	go func() {
+		fmt.Println(this.KbInfoServiceClient)
+		res, err := this.KbInfoServiceClient.UpdateKbDetailList(context.Background(), &grpcServices.KbInfoRequest{Id: []int64{kb.ID}})
+		if err == nil {
+			fmt.Println(kb.ID, "更新结果:", res.Result)
+		} else {
+			fmt.Println(err)
+		}
+
+	}()
 
 	return "修改成功"
 
@@ -152,7 +190,7 @@ func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 	}
 
 	kb := &struct {
-		ID int `gorm:"column:kb_id"`
+		ID int64 `gorm:"column:kb_id"`
 	}{}
 	if req.GroupID != 0 {
 		this.DB.Table("doc_grps").Raw("select kb_id from doc_grps where group_id = ?", req.GroupID).Find(&kb)
@@ -178,12 +216,11 @@ values(?,?,?,?,?,?)`, req.SonTitle, kb.ID, time.Now(), userID, common.ShotURL(ti
 		return "添加失败"
 	}
 
+	go func() {
+		res, _ := this.KbInfoServiceClient.UpdateKbDetailList(context.Background(), &grpcServices.KbInfoRequest{Id: []int64{kb.ID}})
+		fmt.Println(kb.ID, "更新结果:", res.Result)
+	}()
+
 	return "添加成功"
 
 }
-
-
-
-
-
-
