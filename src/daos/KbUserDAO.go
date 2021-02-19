@@ -186,7 +186,6 @@ func (this *KbUserDAO) UpdateGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 
 func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, userID int) string {
 
-
 	kb := &struct {
 		ID int64 `gorm:"column:kb_id"`
 	}{}

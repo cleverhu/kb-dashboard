@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/shenyisyn/goft-gin/goft"
 	"gorm.io/gorm"
@@ -10,6 +11,7 @@ import (
 	"knowledgeBase/src/models/KbUserModel"
 	"knowledgeBase/src/services"
 	"strconv"
+	"strings"
 )
 
 type KbUserController struct {
@@ -45,6 +47,9 @@ func (this *KbUserController) KbDetailByID(ctx *gin.Context) goft.Json {
 func (this *KbUserController) PutKb(ctx *gin.Context) goft.Json {
 	req := &KbModel.KbInputRequest{}
 	goft.Error(ctx.ShouldBindJSON(req), "输入不合法")
+	if strings.TrimSpace(req.Name) == "" {
+		goft.Error(errors.New("标题为空,不能添加"))
+	}
 	req.CreatorID = ctx.GetInt("_userid")
 	result := this.KbUserService.PutKb(req)
 	return gin.H{"result": result, "code": 10002}
