@@ -1,3 +1,3 @@
 git add .
-git commit -m "实现分组的增删改"
+git commit -m "auto"
 git push -u origin master

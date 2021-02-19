@@ -185,20 +185,24 @@ func (this *KbUserDAO) UpdateGroupByID(req *DocGrpModel.DocGroupInsertRequest, u
 }
 
 func (this *KbUserDAO) InsertGroupByID(req *DocGrpModel.DocGroupInsertRequest, userID int) string {
-	if strings.TrimSpace(req.SonTitle) == "" {
-		return "标题为空,添加失败"
-	}
+
 
 	kb := &struct {
 		ID int64 `gorm:"column:kb_id"`
 	}{}
 	if req.GroupID != 0 {
+		if strings.TrimSpace(req.SonTitle) == "" {
+			return "标题为空,添加失败"
+		}
+
 		this.DB.Table("doc_grps").Raw("select kb_id from doc_grps where group_id = ?", req.GroupID).Find(&kb)
 		if kb.ID == 0 {
 			return "父分组不存在,添加失败"
 		}
 	} else {
 		kb.ID = req.KbID
+
+		req.SonTitle = req.Title
 	}
 
 	c := &struct {
